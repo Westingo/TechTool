@@ -38,3 +38,16 @@ h1 { margin-bottom: 1rem; }
     font-size: 0.9rem;
 }
 .scan-card .label { color: #888; }
+.scan-top { margin-bottom: 0.4rem; }
+.scan-bits {
+    font-size: 0.75rem;
+    color: #6a9fd8;
+    word-break: break-all;
+    margin-bottom: 0.3rem;
+}
+.scan-time {
+    font-size: 0.75rem;
+    color: #666;
+}
+.parity-pass { color: #4ade80; }
+.parity-fail { color: #ef4444; font-weight: bold; }

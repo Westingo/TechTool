@@ -11,28 +11,30 @@
     <button id="scan-btn">Fake Scan</button>
     <div id="status">Connecting...</div>
     <div id="scan-log"></div>
-
     <script>
         const btn = document.getElementById("scan-btn");
         const log = document.getElementById("scan-log");
         const status = document.getElementById("status");
-
         const source = new EventSource("/scans");
         source.onopen = () => { status.textContent = "Connected — waiting for scans"; };
         source.onerror = () => { status.textContent = "Disconnected — retrying..."; };
-
         source.onmessage = (event) => {
             const scan = JSON.parse(event.data);
+            const parity = scan.parity_ok ? "PASS" : "FAIL";
+            const parityClass = scan.parity_ok ? "parity-pass" : "parity-fail";
             const card = document.createElement("div");
             card.className = "scan-card";
             card.innerHTML =
-                `<span class="label">Format:</span> ${scan.format} &nbsp; ` +
-                `<span class="label">FC:</span> ${scan.facility_code} &nbsp; ` +
-                `<span class="label">Card:</span> ${scan.card_number} &nbsp; ` +
-                `<span class="label">Time:</span> ${scan.timestamp}`;
+                `<div class="scan-top">` +
+                    `<span class="label">Format:</span> ${scan.format} &nbsp; ` +
+                    `<span class="label">FC:</span> ${scan.facility_code ?? "—"} &nbsp; ` +
+                    `<span class="label">Card:</span> ${scan.card_number ?? "—"} &nbsp; ` +
+                    `<span class="label">Parity:</span> <span class="${parityClass}">${parity}</span>` +
+                `</div>` +
+                `<div class="scan-bits">${scan.raw_bits}</div>` +
+                `<div class="scan-time">${scan.timestamp}</div>`;
             log.prepend(card);
         };
-
         btn.addEventListener("click", () => {
             fetch("/fake-scan", { method: "POST" });
         });

@@ -1,0 +1,46 @@
+{
+  "H10301": {
+    "bits": 26,
+    "fields": {
+      "facility_code": [1, 8],
+      "card_number": [9, 24]
+    },
+    "parity": {
+      "even": [0, 12],
+      "odd": [13, 25]
+    }
+  },
+  "H10306": {
+    "bits": 34,
+    "fields": {
+      "facility_code": [1, 16],
+      "card_number": [17, 32]
+    },
+    "parity": {
+      "even": [0, 16],
+      "odd": [17, 33]
+    }
+  },
+  "HID_Corp1000_35": {
+    "bits": 35,
+    "fields": {
+      "company_code": [2, 13],
+      "card_number": [14, 33]
+    },
+    "parity": {
+      "even": [0, 17],
+      "odd": [18, 34]
+    }
+  },
+  "H10304": {
+    "bits": 37,
+    "fields": {
+      "facility_code": [1, 16],
+      "card_number": [17, 35]
+    },
+    "parity": {
+      "even": [0, 18],
+      "odd": [19, 36]
+    }
+  }
+}
