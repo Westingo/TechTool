@@ -1,0 +1,40 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: system-ui, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+h1 { margin-bottom: 1rem; }
+#scan-btn {
+    background: #0f3460;
+    color: #e0e0e0;
+    border: 2px solid #16213e;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#scan-btn:hover { background: #16213e; }
+#status {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+#scan-log {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.scan-card {
+    background: #16213e;
+    border-left: 4px solid #e94560;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+.scan-card .label { color: #888; }
