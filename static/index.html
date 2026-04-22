@@ -8,14 +8,39 @@
 </head>
 <body>
     <h1>Access Control Tech Tool</h1>
-    <button id="scan-btn">Fake Scan</button>
-    <div id="status">Connecting...</div>
-    <div id="scan-log"></div>
+
+    <div id="mode-tabs">
+        <button class="tab active" onclick="switchTab('receive')">Receive</button>
+        <button class="tab" onclick="switchTab('transmit')">Transmit</button>
+    </div>
+
+    <div id="receive-panel">
+        <button id="scan-btn">Fake Scan</button>
+        <div id="status">Connecting...</div>
+        <div id="scan-log"></div>
+    </div>
+
+    <div id="transmit-panel" style="display:none;">
+        <div class="tx-form">
+            <label>Facility Code</label>
+            <input type="number" id="tx-fc" min="0" max="255" value="1">
+            <label>Card Number</label>
+            <input type="number" id="tx-card" min="0" max="65535" value="1">
+            <label>Format</label>
+            <select id="tx-format">
+                <option value="H10301">H10301 (26-bit)</option>
+            </select>
+            <button id="tx-btn">Transmit</button>
+            <div id="tx-status"></div>
+        </div>
+    </div>
+
     <script>
         const btn = document.getElementById("scan-btn");
         const log = document.getElementById("scan-log");
         const status = document.getElementById("status");
         const source = new EventSource("/scans");
+
         source.onopen = () => { status.textContent = "Connected — waiting for scans"; };
         source.onerror = () => { status.textContent = "Disconnected — retrying..."; };
         source.onmessage = (event) => {
@@ -35,9 +60,41 @@
                 `<div class="scan-time">${scan.timestamp}</div>`;
             log.prepend(card);
         };
+
         btn.addEventListener("click", () => {
             fetch("/fake-scan", { method: "POST" });
         });
+
+        document.getElementById("tx-btn").addEventListener("click", async () => {
+            const fc = document.getElementById("tx-fc").value;
+            const card = document.getElementById("tx-card").value;
+            const fmt = document.getElementById("tx-format").value;
+            const txStatus = document.getElementById("tx-status");
+
+            txStatus.textContent = "Transmitting...";
+            const res = await fetch(`/transmit?facility_code=${fc}&card_number=${card}&format_type=${fmt}`, {
+                method: "POST"
+            });
+            const data = await res.json();
+            if (data.error) {
+                txStatus.textContent = "Error: " + data.error;
+            } else {
+                txStatus.textContent = `Sent FC:${data.facility_code} Card:${data.card_number} (${data.bits})`;
+            }
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'receive') {
+                document.getElementById('receive-panel').style.display = 'block';
+                document.getElementById('transmit-panel').style.display = 'none';
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else {
+                document.getElementById('receive-panel').style.display = 'none';
+                document.getElementById('transmit-panel').style.display = 'block';
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            }
+        }
     </script>
 </body>
 </html>
